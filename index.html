@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="az" style="position: relative">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/logo-dark.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Best Vision Agency - Vizyonunuzu reallığa çeviririk" />
+    <title>Best Vision Agency</title>
+
+    <script>
+      (function(){
+        try {
+          var t = localStorage.getItem('bv-theme');
+          if (t === 'light') { document.documentElement.classList.remove('dark'); }
+          else { document.documentElement.classList.add('dark'); }
+        } catch(e) { document.documentElement.classList.add('dark'); }
+      })();
+    </script>
+  </head>
+  <body class="relative">
+    <div id="root" class="relative"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
