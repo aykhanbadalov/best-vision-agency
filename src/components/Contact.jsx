@@ -88,10 +88,10 @@ export default function Contact() {
 
     try {
       await emailjs.send(
-        'service_s7h7brj',
-        'template_hy8s696',
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
         templateParams,
-        'aJyDowga0JKASO9k7',
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
       )
       setSubmitted(true)
     } catch (err) {
