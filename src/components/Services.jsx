@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { m, useInView, AnimatePresence } from 'framer-motion'
+import { m, useInView } from 'framer-motion'
 import { useLang } from '../context/LanguageContext'
 
 const serviceStatic = [
@@ -25,12 +25,12 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
       <div className="relative p-8 lg:p-10">
         <div className="flex items-start justify-between mb-6">
           <span className="text-slate-300 dark:text-white/20 group-hover:text-slate-900 dark:group-hover:text-white font-display font-black text-6xl leading-none transition-colors duration-300">{service.number}</span>
-          <m.span
-            animate={isActive ? { rotate: 90 } : { rotate: 0 }}
-            className={`text-3xl transition-colors duration-300 group-hover:text-primary dark:group-hover:text-blue-400 ${isActive ? 'text-primary dark:text-blue-400' : 'text-slate-300 dark:text-white/40'}`}
+          <span
+            style={{ display: 'inline-block', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease, color 0.3s ease' }}
+            className={`text-3xl group-hover:text-primary dark:group-hover:text-blue-400 ${isActive ? 'text-primary dark:text-blue-400' : 'text-slate-300 dark:text-white/40'}`}
           >
             {service.icon}
-          </m.span>
+          </span>
         </div>
 
         <h3 className="font-display text-2xl font-black text-slate-900 dark:text-white mb-1" style={{ overflow: 'visible' }}>
@@ -39,29 +39,27 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
         <p className="section-label mb-4">{service.subtitle}</p>
         <p className="text-slate-500 dark:text-white/50 text-sm leading-relaxed">{service.desc}</p>
 
-        <AnimatePresence>
-          {isActive && (
-            <m.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              style={{ overflow: 'hidden' }}
-            >
-              <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10">
-                <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
-                <ul className="grid grid-cols-2 gap-2">
-                  {service.features.map((f) => (
-                    <li key={f} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
-                      <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </m.div>
-          )}
-        </AnimatePresence>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateRows: isActive ? '1fr' : '0fr',
+            transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+          }}
+        >
+          <div style={{ overflow: 'hidden' }}>
+            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10">
+              <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
+              <ul className="grid grid-cols-2 gap-2">
+                {service.features.map((f) => (
+                  <li key={f} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                    <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
+                    {f}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
 
         <div className={`mt-6 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase transition-colors duration-300 ${
           isActive
@@ -69,7 +67,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
             : 'text-slate-400 dark:text-white/30 group-hover:text-primary dark:group-hover:text-blue-400'
         }`}>
           <span>{isActive ? expanded : collapsed}</span>
-          <m.span animate={isActive ? { rotate: 90 } : { rotate: 0 }}>→</m.span>
+          <span style={{ display: 'inline-block', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>→</span>
         </div>
       </div>
     </m.div>
