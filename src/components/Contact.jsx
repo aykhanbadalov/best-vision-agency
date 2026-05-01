@@ -42,7 +42,7 @@ function StepIndicator({ current, steps }) {
 
 export default function Contact() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
   const [step, setStep] = useState(0)
   const [form, setForm] = useState({ service: '', budget: '', name: '', email: '', phone: '', message: '' })
   const [errors, setErrors] = useState({})

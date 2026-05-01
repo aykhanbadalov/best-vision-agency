@@ -133,7 +133,7 @@ function CaseStudyModal({ project, onClose, labels }) {
 
 export default function Portfolio() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
   const [selectedProject, setSelectedProject] = useState(null)
   const { t } = useLang()
 

@@ -78,7 +78,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
 
 export default function Services() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
   const [activeService, setActiveService] = useState(null)
   const { t } = useLang()
 

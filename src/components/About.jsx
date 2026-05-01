@@ -4,7 +4,7 @@ import { useLang } from '../context/LanguageContext'
 
 function TimelineItem({ event, index }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px', amount: 0.2 })
+  const isInView = useInView(ref, { once: true, amount: 0.1 })
 
   return (
     <m.div
@@ -41,7 +41,7 @@ function TimelineItem({ event, index }) {
 
 export default function About() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
+  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
   const { t } = useLang()
 
   return (

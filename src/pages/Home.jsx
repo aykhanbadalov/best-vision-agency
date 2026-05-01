@@ -22,7 +22,7 @@ const portfolioStatic = [
 /* ── About Summary ─────────────────────────────────────── */
 function HomeAbout() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px', amount: 0.2 })
+  const inView = useInView(ref, { once: true, amount: 0.1 })
   const { t } = useLang()
   return (
     <section ref={ref} className="block w-full py-24 bg-white dark:bg-black relative overflow-hidden">
@@ -69,7 +69,7 @@ function HomeAbout() {
 /* ── Services Summary ───────────────────────────────────── */
 function HomeServices() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px', amount: 0.2 })
+  const inView = useInView(ref, { once: true, amount: 0.1 })
   const { t } = useLang()
   const serviceItems = serviceStatic.map((s, i) => ({ ...s, ...t.services.cards[i] }))
 
@@ -111,7 +111,7 @@ function HomeServices() {
 /* ── Portfolio Summary ──────────────────────────────────── */
 function HomePortfolio() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px', amount: 0.2 })
+  const inView = useInView(ref, { once: true, amount: 0.1 })
   const { t } = useLang()
   const projects = portfolioStatic.map((s, i) => ({ ...s, ...t.homePortfolio.projects[i] }))
 
@@ -159,7 +159,7 @@ function HomePortfolio() {
 /* ── Contact CTA ────────────────────────────────────────── */
 function HomeContactCTA() {
   const ref = useRef(null)
-  const inView = useInView(ref, { once: true, margin: '-80px', amount: 0.2 })
+  const inView = useInView(ref, { once: true, amount: 0.1 })
   const { t } = useLang()
   return (
     <section ref={ref} className="block w-full py-24 bg-white dark:bg-black relative">
