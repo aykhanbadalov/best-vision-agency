@@ -16,7 +16,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: 0.1 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
       onClick={onClick}
-      className={`group cursor-pointer border transition-all duration-500 relative overflow-hidden ${
+      className={`group cursor-pointer border transition-colors duration-300 relative overflow-hidden ${
         isActive
           ? 'border-primary bg-primary/10'
           : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-white/20'
@@ -27,7 +27,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
           <span className="text-slate-300 dark:text-white/20 group-hover:text-slate-900 dark:group-hover:text-white font-display font-black text-6xl leading-none transition-colors duration-300">{service.number}</span>
           <m.span
             animate={isActive ? { rotate: 90 } : { rotate: 0 }}
-            className={`text-3xl transition-all duration-300 group-hover:text-primary dark:group-hover:text-blue-400 ${isActive ? 'text-primary dark:text-blue-400' : 'text-slate-300 dark:text-white/40'}`}
+            className={`text-3xl transition-colors duration-300 group-hover:text-primary dark:group-hover:text-blue-400 ${isActive ? 'text-primary dark:text-blue-400' : 'text-slate-300 dark:text-white/40'}`}
           >
             {service.icon}
           </m.span>
