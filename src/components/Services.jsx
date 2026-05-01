@@ -42,11 +42,11 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
         <AnimatePresence>
           {isActive && (
             <m.div
-              initial={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
-              animate={{ clipPath: 'inset(0 0 0% 0)', opacity: 1 }}
-              exit={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              style={{ willChange: 'clip-path, opacity' }}
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              style={{ overflow: 'hidden' }}
             >
               <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10">
                 <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
