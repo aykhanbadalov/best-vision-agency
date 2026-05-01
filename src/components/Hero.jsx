@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from 'react'
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { m, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
@@ -57,20 +57,25 @@ export default function Hero() {
             backgroundSize: '80px 80px',
           }}
         />
-        <motion.div
+        <m.div
           animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.2, 1] }}
           transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+          style={{ willChange: 'transform' }}
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/20 rounded-full blur-3xl"
         />
-        <motion.div
+        <m.div
           animate={{ x: [0, -40, 0], y: [0, 40, 0], scale: [1, 0.8, 1] }}
           transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
+          style={{ willChange: 'transform' }}
           className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/8 dark:bg-primary/15 rounded-full blur-3xl"
         />
       </div>
 
       {/* Content */}
-      <motion.div style={{ y, opacity }} className="relative z-10 section-container w-full pt-32 pb-24">
+      <m.div
+        style={{ y, opacity, willChange: 'transform, opacity' }}
+        className="relative z-10 section-container w-full pt-32 pb-24"
+      >
         <div className="max-w-5xl">
           {/* Headline */}
           <div
@@ -80,7 +85,7 @@ export default function Hero() {
           >
             <div className="flex flex-wrap overflow-visible pb-3">
               {headlineWords.map((word, i) => (
-                <motion.span
+                <m.span
                   key={`${word}-${i}`}
                   initial={{ y: 100, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
@@ -92,7 +97,7 @@ export default function Hero() {
                   className="inline-block mr-4 mb-2 overflow-visible"
                   style={{ overflow: 'visible' }}
                 >
-                  <motion.span
+                  <m.span
                     animate={
                       hovered
                         ? { color: i % 2 === 0 ? headlineBaseColor : headlineAccentColor }
@@ -108,21 +113,21 @@ export default function Hero() {
                     }}
                   >
                     {word}
-                  </motion.span>
-                </motion.span>
+                  </m.span>
+                </m.span>
               ))}
             </div>
           </div>
 
           {/* Cycling sub-headline */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.2 }}
             className="mb-12 h-12 overflow-hidden"
           >
             <AnimatePresence mode="wait">
-              <motion.div
+              <m.div
                 key={`${activeWord}-${t.hero.wordsSuffix}`}
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
@@ -142,12 +147,12 @@ export default function Hero() {
                 >
                   {t.hero.wordsSuffix}
                 </span>
-              </motion.div>
+              </m.div>
             </AnimatePresence>
-          </motion.div>
+          </m.div>
 
           {/* Subtext + CTA */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.0 }}
@@ -168,23 +173,24 @@ export default function Hero() {
                 </button>
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Scroll indicator */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 2 }}
           className="absolute bottom-8 right-0 flex flex-col items-center gap-3"
         >
-          <motion.div
+          <m.div
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 1.5, repeat: Infinity }}
+            style={{ willChange: 'transform' }}
             className="w-px h-12 bg-gradient-to-b from-slate-400 dark:from-white/40 to-transparent"
           />
-        </motion.div>
-      </motion.div>
+        </m.div>
+      </m.div>
 
       {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-100 dark:from-black to-transparent" />

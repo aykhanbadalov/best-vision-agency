@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { m, useInView, AnimatePresence } from 'framer-motion'
 import { useLang } from '../context/LanguageContext'
 
 const projectStatic = [
@@ -16,7 +16,7 @@ function ProjectCard({ project, onClick, clickHint }) {
   const isLarge = project.size === 'large'
 
   return (
-    <motion.div
+    <m.div
       layout
       className="relative overflow-hidden cursor-pointer group"
       onHoverStart={() => setHovered(true)}
@@ -36,7 +36,7 @@ function ProjectCard({ project, onClick, clickHint }) {
 
         <AnimatePresence>
           {hovered && (
-            <motion.div
+            <m.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
@@ -45,11 +45,11 @@ function ProjectCard({ project, onClick, clickHint }) {
               <div className="w-16 h-16 bg-white/10 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
                 <div className="w-0 h-0 border-t-8 border-b-8 border-l-[14px] border-transparent border-l-white ml-1" />
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
-        <motion.div
+        <m.div
           animate={{ y: hovered ? 0 : 20, opacity: hovered ? 1 : 0 }}
           transition={{ duration: 0.4 }}
           className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
@@ -60,7 +60,7 @@ function ProjectCard({ project, onClick, clickHint }) {
             <span className="text-green-400 text-sm font-semibold">{project.result}</span>
             <span className="text-white/30 text-xs">{clickHint}</span>
           </div>
-        </motion.div>
+        </m.div>
       </div>
 
       <div className="absolute top-4 left-4">
@@ -68,20 +68,20 @@ function ProjectCard({ project, onClick, clickHint }) {
           {project.category}
         </span>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
 function CaseStudyModal({ project, onClose, labels }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
       onClick={onClose}
     >
-      <motion.div
+      <m.div
         initial={{ scale: 0.9, y: 40 }}
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 40 }}
@@ -126,14 +126,14 @@ function CaseStudyModal({ project, onClose, labels }) {
             <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed">{project.resultDetail}</p>
           </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </m.div>
+    </m.div>
   )
 }
 
 export default function Portfolio() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
   const [selectedProject, setSelectedProject] = useState(null)
   const { t } = useLang()
 
@@ -144,15 +144,15 @@ export default function Portfolio() {
       <div className="section-container">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-20 gap-8">
           <div>
-            <motion.span
+            <m.span
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
               className="section-label block mb-6"
             >
               {t.portfolio.label}
-            </motion.span>
-            <motion.h2
+            </m.span>
+            <m.h2
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.1 }}
@@ -161,21 +161,21 @@ export default function Portfolio() {
               {t.portfolio.heading1}
               <br />
               <span className="text-accent italic">{t.portfolio.heading2}</span>
-            </motion.h2>
+            </m.h2>
           </div>
-          <motion.p
+          <m.p
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-slate-400 dark:text-white/40 max-w-xs text-sm leading-relaxed lg:text-right"
           >
             {t.portfolio.subtext}
-          </motion.p>
+          </m.p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 auto-rows-auto">
           {projects.map((project, i) => (
-            <motion.div
+            <m.div
               key={project.id}
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
@@ -183,10 +183,9 @@ export default function Portfolio() {
               className={project.size === 'large' ? 'lg:col-span-2' : ''}
             >
               <ProjectCard project={project} onClick={setSelectedProject} clickHint={t.portfolio.clickHint} />
-            </motion.div>
+            </m.div>
           ))}
         </div>
-
       </div>
 
       <AnimatePresence>

@@ -1,13 +1,13 @@
 import { useRef } from 'react'
-import { motion, useInView } from 'framer-motion'
+import { m, useInView } from 'framer-motion'
 import { useLang } from '../context/LanguageContext'
 
 function TimelineItem({ event, index }) {
   const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const isInView = useInView(ref, { once: true, margin: '-100px', amount: 0.2 })
 
   return (
-    <motion.div
+    <m.div
       ref={ref}
       initial={{ opacity: 0, x: index % 2 === 0 ? -60 : 60 }}
       animate={isInView ? { opacity: 1, x: 0 } : {}}
@@ -26,7 +26,7 @@ function TimelineItem({ event, index }) {
 
       {/* Center dot */}
       <div className="flex flex-col items-center flex-shrink-0">
-        <motion.div
+        <m.div
           initial={{ scale: 0 }}
           animate={isInView ? { scale: 1 } : {}}
           transition={{ duration: 0.4, delay: 0.2 }}
@@ -35,13 +35,13 @@ function TimelineItem({ event, index }) {
       </div>
 
       <div className="flex-1" />
-    </motion.div>
+    </m.div>
   )
 }
 
 export default function About() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
   const { t } = useLang()
 
   return (
@@ -52,15 +52,15 @@ export default function About() {
         {/* Header */}
         <div className="grid lg:grid-cols-2 gap-20 mb-32 items-end">
           <div>
-            <motion.span
+            <m.span
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
               className="section-label block mb-6"
             >
               {t.about.label}
-            </motion.span>
-            <motion.h2
+            </m.span>
+            <m.h2
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.1 }}
@@ -69,10 +69,10 @@ export default function About() {
               {t.about.heading1}
               <br />
               <span className="text-accent italic">{t.about.heading2}</span>
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
@@ -92,11 +92,11 @@ export default function About() {
                 </div>
               ))}
             </div>
-          </motion.div>
+          </m.div>
         </div>
 
         {/* Impression Block */}
-        <motion.div
+        <m.div
           initial={{ opacity: 0, y: 40 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.8, delay: 0.4 }}
@@ -114,11 +114,11 @@ export default function About() {
               {t.about.quoteMid}"
             </blockquote>
           </div>
-        </motion.div>
+        </m.div>
 
         {/* Timeline */}
         <div>
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6 }}
@@ -126,7 +126,7 @@ export default function About() {
           >
             <span className="section-label">{t.about.timelineLabel}</span>
             <span className="flex-1 h-px bg-slate-200 dark:bg-white/10" />
-          </motion.div>
+          </m.div>
 
           <div className="relative">
             <div className="absolute left-1/2 top-0 bottom-0 w-px bg-slate-200 dark:bg-white/10 -translate-x-1/2" />

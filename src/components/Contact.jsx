@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { m, useInView, AnimatePresence } from 'framer-motion'
 import emailjs from '@emailjs/browser'
 import { useLang } from '../context/LanguageContext'
 
@@ -9,7 +9,7 @@ function StepIndicator({ current, steps }) {
       {steps.map((step, i) => (
         <div key={step.number} className="flex items-center flex-1 min-w-0">
           <div className="flex flex-col items-center gap-1.5 flex-shrink-0">
-            <motion.div
+            <m.div
               animate={{
                 backgroundColor: i <= current ? '#040571' : 'rgba(0,0,0,0)',
                 borderColor: i <= current ? '#040571' : 'rgba(0,0,0,0.2)',
@@ -17,19 +17,19 @@ function StepIndicator({ current, steps }) {
               className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center"
             >
               {i < current ? (
-                <motion.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-white text-xs">✓</motion.span>
+                <m.span initial={{ scale: 0 }} animate={{ scale: 1 }} className="text-white text-xs">✓</m.span>
               ) : (
                 <span className={`text-xs font-bold ${i === current ? 'text-white' : 'text-slate-400 dark:text-white/30'}`}>
                   {step.number}
                 </span>
               )}
-            </motion.div>
+            </m.div>
             <span className={`text-xs tracking-wider whitespace-nowrap ${i === current ? 'text-slate-900 dark:text-white' : 'text-slate-400 dark:text-white/30'}`}>
               {step.title}
             </span>
           </div>
           {i < steps.length - 1 && (
-            <motion.div
+            <m.div
               animate={{ backgroundColor: i < current ? '#040571' : undefined }}
               className={`flex-1 h-px mx-2 sm:mx-4 mb-5 ${i < current ? 'bg-primary' : 'bg-slate-200 dark:bg-white/10'}`}
             />
@@ -42,7 +42,7 @@ function StepIndicator({ current, steps }) {
 
 export default function Contact() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
   const [step, setStep] = useState(0)
   const [form, setForm] = useState({ service: '', budget: '', name: '', email: '', phone: '', message: '' })
   const [errors, setErrors] = useState({})
@@ -133,20 +133,20 @@ export default function Contact() {
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
           {/* Left Info */}
           <div>
-            <motion.span initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="section-label block mb-6">
+            <m.span initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6 }} className="section-label block mb-6">
               {t.contact.label}
-            </motion.span>
-            <motion.h2 initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.1 }} className="section-title mb-8">
+            </m.span>
+            <m.h2 initial={{ opacity: 0, y: 40 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.8, delay: 0.1 }} className="section-title mb-8">
               {t.contact.heading1}
               <br />
               <span className="text-accent italic">{t.contact.heading2}</span>
-            </motion.h2>
+            </m.h2>
 
-            <motion.p initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.3 }} className="text-slate-600 dark:text-gray-300 text-base leading-relaxed mb-12 max-w-sm">
+            <m.p initial={{ opacity: 0, y: 20 }} animate={isInView ? { opacity: 1, y: 0 } : {}} transition={{ duration: 0.6, delay: 0.3 }} className="text-slate-600 dark:text-gray-300 text-base leading-relaxed mb-12 max-w-sm">
               {t.contact.subtext}
-            </motion.p>
+            </m.p>
 
-            <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.5 }} className="space-y-5">
+            <m.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 0.6, delay: 0.5 }} className="space-y-5">
               {t.contact.infoItems.map(({ label, value, icon, href }) => (
                 <div key={label} className="flex items-center gap-4">
                   <div className="w-10 h-10 bg-primary/10 dark:bg-blue-400/10 border border-primary/20 dark:border-blue-400/20 flex items-center justify-center text-primary dark:text-blue-400 text-sm flex-shrink-0">
@@ -164,9 +164,9 @@ export default function Contact() {
                   </div>
                 </div>
               ))}
-            </motion.div>
+            </m.div>
 
-            <motion.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ delay: 0.7 }} className="flex items-center gap-5 mt-10 flex-wrap">
+            <m.div initial={{ opacity: 0 }} animate={isInView ? { opacity: 1 } : {}} transition={{ duration: 0.6, delay: 0.7 }} className="flex items-center gap-5 mt-10 flex-wrap">
               <a
                 href="https://www.instagram.com/bestvisionagency?igsh=cnNvbno0bWN2MGs%3D&utm_source=qr"
                 target="_blank"
@@ -175,24 +175,24 @@ export default function Contact() {
               >
                 Instagram
               </a>
-            </motion.div>
+            </m.div>
           </div>
 
           {/* Right Form */}
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: 40 }}
             animate={isInView ? { opacity: 1, x: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.3 }}
             className="w-full overflow-hidden bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-white/10 p-6 sm:p-8 lg:p-10"
           >
             {submitted ? (
-              <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-12">
+              <m.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} className="text-center py-12">
                 <div className="w-16 h-16 bg-primary/20 dark:bg-blue-400/20 border border-primary/40 dark:border-blue-400/40 rounded-full flex items-center justify-center mx-auto mb-6">
                   <span className="text-primary dark:text-blue-400 text-2xl">✓</span>
                 </div>
                 <h3 className="font-display text-3xl font-bold text-slate-900 dark:text-white mb-3" style={{ overflow: 'visible' }}>{t.contact.successTitle}</h3>
                 <p className="text-slate-500 dark:text-gray-300 text-sm leading-relaxed">{t.contact.successText}</p>
-              </motion.div>
+              </m.div>
             ) : (
               <form onSubmit={handleSubmit} noValidate className="w-full">
                 <StepIndicator current={step} steps={t.contact.steps} />
@@ -200,7 +200,7 @@ export default function Contact() {
                 <div className="overflow-hidden">
                   <AnimatePresence mode="wait">
                     {step === 0 && (
-                      <motion.div key="step0" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
+                      <m.div key="step0" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
                         <h3 className="text-slate-900 dark:text-white font-display text-xl sm:text-2xl font-bold mb-5" style={{ overflow: 'visible' }}>
                           {t.contact.step0Title}
                         </h3>
@@ -223,11 +223,11 @@ export default function Contact() {
                             </button>
                           ))}
                         </div>
-                      </motion.div>
+                      </m.div>
                     )}
 
                     {step === 1 && (
-                      <motion.div key="step1" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
+                      <m.div key="step1" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
                         <h3 className="text-slate-900 dark:text-white font-display text-xl sm:text-2xl font-bold mb-5" style={{ overflow: 'visible' }}>
                           {t.contact.step1Title}
                         </h3>
@@ -251,11 +251,11 @@ export default function Contact() {
                           ))}
                         </div>
                         <button type="button" onClick={() => setStep(0)} className="text-slate-400 dark:text-white/40 text-xs hover:text-primary transition-colors">{t.contact.back}</button>
-                      </motion.div>
+                      </m.div>
                     )}
 
                     {step === 2 && (
-                      <motion.div key="step2" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
+                      <m.div key="step2" variants={variants} initial="enter" animate="center" exit="exit" transition={{ duration: 0.3 }}>
                         <h3 className="text-slate-900 dark:text-white font-display text-xl sm:text-2xl font-bold mb-5" style={{ overflow: 'visible' }}>
                           {t.contact.step2Title}
                         </h3>
@@ -281,7 +281,7 @@ export default function Contact() {
                               />
                               <AnimatePresence>
                                 {errors[name] && (
-                                  <motion.p
+                                  <m.p
                                     variants={errorVariants}
                                     initial="initial"
                                     animate="animate"
@@ -290,7 +290,7 @@ export default function Contact() {
                                     className="text-red-400 dark:text-red-400 text-xs mt-1.5"
                                   >
                                     {errors[name]}
-                                  </motion.p>
+                                  </m.p>
                                 )}
                               </AnimatePresence>
                             </div>
@@ -308,13 +308,13 @@ export default function Contact() {
                         </div>
 
                         <div className="flex items-center gap-4 flex-wrap">
-                          <motion.button
+                          <m.button
                             type="submit"
                             disabled={isSubmitting}
                             className="btn-primary flex-1 justify-center min-w-[120px] disabled:opacity-60 disabled:cursor-not-allowed"
                           >
                             {isSubmitting ? 'Göndərilir...' : t.contact.submit}
-                          </motion.button>
+                          </m.button>
                           <button type="button" onClick={() => setStep(1)} className="text-slate-400 dark:text-white/40 text-xs hover:text-primary transition-colors whitespace-nowrap">
                             {t.contact.back}
                           </button>
@@ -322,7 +322,7 @@ export default function Contact() {
 
                         <AnimatePresence>
                           {sendError && (
-                            <motion.p
+                            <m.p
                               initial={{ opacity: 0, y: -4 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: -4 }}
@@ -330,7 +330,7 @@ export default function Contact() {
                               className="mt-3 text-red-500 dark:text-red-400 text-xs"
                             >
                               Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.
-                            </motion.p>
+                            </m.p>
                           )}
                         </AnimatePresence>
 
@@ -340,13 +340,13 @@ export default function Contact() {
                             {form.budget && <p>{t.contact.budgetLabel}: <span className="text-slate-700 dark:text-gray-200">{form.budget}</span></p>}
                           </div>
                         )}
-                      </motion.div>
+                      </m.div>
                     )}
                   </AnimatePresence>
                 </div>
               </form>
             )}
-          </motion.div>
+          </m.div>
         </div>
       </div>
     </section>

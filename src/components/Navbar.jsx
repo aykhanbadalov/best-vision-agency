@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
@@ -39,7 +39,7 @@ export default function Navbar() {
 
   return (
     <>
-      <motion.nav
+      <m.nav
         initial={{ y: -100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.8, ease: 'easeOut' }}
@@ -59,7 +59,7 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Links — absolutely centered, decoupled from logo/actions width */}
+          {/* Desktop Links — absolutely centered */}
           <div className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
             {t.nav.links.map((link) => {
               const active = location.pathname === link.to
@@ -102,7 +102,7 @@ export default function Navbar() {
               aria-label="Toggle theme"
             >
               <AnimatePresence mode="wait">
-                <motion.span
+                <m.span
                   key={dark ? 'sun' : 'moon'}
                   initial={{ rotate: -90, opacity: 0 }}
                   animate={{ rotate: 0, opacity: 1 }}
@@ -110,7 +110,7 @@ export default function Navbar() {
                   transition={{ duration: 0.2 }}
                 >
                   {dark ? <SunIcon /> : <MoonIcon />}
-                </motion.span>
+                </m.span>
               </AnimatePresence>
             </button>
 
@@ -146,27 +146,27 @@ export default function Navbar() {
               className="flex flex-col gap-1.5 p-2"
               aria-label="Menu"
             >
-              <motion.span
+              <m.span
                 animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
                 className="w-6 h-px bg-slate-900 dark:bg-white block"
               />
-              <motion.span
+              <m.span
                 animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
                 className="w-6 h-px bg-slate-900 dark:bg-white block"
               />
-              <motion.span
+              <m.span
                 animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
                 className="w-6 h-px bg-slate-900 dark:bg-white block"
               />
             </button>
           </div>
         </div>
-      </motion.nav>
+      </m.nav>
 
       {/* Mobile Menu */}
       <AnimatePresence>
         {menuOpen && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, x: '100%' }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
@@ -174,7 +174,7 @@ export default function Navbar() {
             className="fixed inset-0 z-40 bg-white dark:bg-slate-950 flex flex-col items-center justify-center gap-10"
           >
             {t.nav.links.map((link, i) => (
-              <motion.div
+              <m.div
                 key={link.to}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -186,9 +186,9 @@ export default function Navbar() {
                 >
                   {link.label}
                 </Link>
-              </motion.div>
+              </m.div>
             ))}
-            <motion.div
+            <m.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
@@ -197,8 +197,8 @@ export default function Navbar() {
               <Link to="/elaqe">
                 <button className="btn-primary">{t.nav.cta}</button>
               </Link>
-            </motion.div>
-          </motion.div>
+            </m.div>
+          </m.div>
         )}
       </AnimatePresence>
     </>

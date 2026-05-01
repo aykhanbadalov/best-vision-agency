@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { motion, useInView, AnimatePresence } from 'framer-motion'
+import { m, useInView, AnimatePresence } from 'framer-motion'
 import { useLang } from '../context/LanguageContext'
 
 const serviceStatic = [
@@ -11,7 +11,7 @@ const serviceStatic = [
 
 function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, expanded }) {
   return (
-    <motion.div
+    <m.div
       initial={{ opacity: 0, y: 60 }}
       animate={isInView ? { opacity: 1, y: 0 } : {}}
       transition={{ duration: 0.7, delay: 0.1 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
@@ -25,12 +25,12 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
       <div className="relative p-8 lg:p-10">
         <div className="flex items-start justify-between mb-6">
           <span className="text-slate-300 dark:text-white/20 group-hover:text-slate-900 dark:group-hover:text-white font-display font-black text-6xl leading-none transition-colors duration-300">{service.number}</span>
-          <motion.span
+          <m.span
             animate={isActive ? { rotate: 90 } : { rotate: 0 }}
             className={`text-3xl transition-all duration-300 group-hover:text-primary dark:group-hover:text-blue-400 ${isActive ? 'text-primary dark:text-blue-400' : 'text-slate-300 dark:text-white/40'}`}
           >
             {service.icon}
-          </motion.span>
+          </m.span>
         </div>
 
         <h3 className="font-display text-2xl font-black text-slate-900 dark:text-white mb-1" style={{ overflow: 'visible' }}>
@@ -41,12 +41,12 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
 
         <AnimatePresence>
           {isActive && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: 'auto', opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="overflow-hidden"
+            <m.div
+              initial={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
+              animate={{ clipPath: 'inset(0 0 0% 0)', opacity: 1 }}
+              exit={{ clipPath: 'inset(0 0 100% 0)', opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              style={{ willChange: 'clip-path, opacity' }}
             >
               <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10">
                 <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
@@ -59,7 +59,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
                   ))}
                 </ul>
               </div>
-            </motion.div>
+            </m.div>
           )}
         </AnimatePresence>
 
@@ -69,16 +69,16 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
             : 'text-slate-400 dark:text-white/30 group-hover:text-primary dark:group-hover:text-blue-400'
         }`}>
           <span>{isActive ? expanded : collapsed}</span>
-          <motion.span animate={isActive ? { rotate: 90 } : { rotate: 0 }}>→</motion.span>
+          <m.span animate={isActive ? { rotate: 90 } : { rotate: 0 }}>→</m.span>
         </div>
       </div>
-    </motion.div>
+    </m.div>
   )
 }
 
 export default function Services() {
   const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, margin: '-100px' })
+  const isInView = useInView(sectionRef, { once: true, margin: '-100px', amount: 0.2 })
   const [activeService, setActiveService] = useState(null)
   const { t } = useLang()
 
@@ -93,15 +93,15 @@ export default function Services() {
       <div className="section-container relative">
         <div className="grid lg:grid-cols-2 gap-12 mb-24 items-end">
           <div>
-            <motion.span
+            <m.span
               initial={{ opacity: 0, y: 20 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6 }}
               className="section-label block mb-6"
             >
               {t.services.label}
-            </motion.span>
-            <motion.h2
+            </m.span>
+            <m.h2
               initial={{ opacity: 0, y: 40 }}
               animate={isInView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.8, delay: 0.1 }}
@@ -110,17 +110,17 @@ export default function Services() {
               {t.services.heading1}
               <br />
               <span className="text-accent italic">{t.services.heading2}</span>
-            </motion.h2>
+            </m.h2>
           </div>
 
-          <motion.p
+          <m.p
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-slate-500 dark:text-white/50 text-base leading-relaxed"
           >
             {t.services.subtext}
-          </motion.p>
+          </m.p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -137,7 +137,6 @@ export default function Services() {
             />
           ))}
         </div>
-
       </div>
     </section>
   )

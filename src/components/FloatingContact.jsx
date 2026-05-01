@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { m, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useLang } from '../context/LanguageContext'
 
@@ -11,7 +11,7 @@ export default function FloatingContact() {
     <div className="fixed bottom-8 right-8 z-40 flex flex-col items-end gap-3">
       <AnimatePresence>
         {expanded && (
-          <motion.div
+          <m.div
             initial={{ opacity: 0, y: 20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.9 }}
@@ -43,7 +43,7 @@ export default function FloatingContact() {
                 <span>{t.floating.cta}</span>
               </Link>
             </div>
-          </motion.div>
+          </m.div>
         )}
       </AnimatePresence>
 
@@ -53,18 +53,19 @@ export default function FloatingContact() {
         className="w-14 h-14 bg-primary hover:bg-primary/90 text-white flex items-center justify-center shadow-lg shadow-primary/30 relative overflow-hidden transition-colors duration-300"
         aria-label="Əlaqə"
       >
-        <motion.div
+        <m.div
           animate={{ rotate: expanded ? 45 : 0 }}
           transition={{ duration: 0.3 }}
           className="text-xl leading-none font-light"
         >
           {expanded ? '✕' : '✉'}
-        </motion.div>
+        </m.div>
 
         {!expanded && (
-          <motion.div
+          <m.div
             animate={{ scale: [1, 1.8], opacity: [0.4, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
+            style={{ willChange: 'transform, opacity' }}
             className="absolute inset-0 bg-primary rounded-full pointer-events-none"
           />
         )}
