@@ -44,27 +44,22 @@ function ServiceCard({ service, isActive, onClick, index, collapsed, expanded })
         <p className="section-label mb-4">{service.subtitle}</p>
         <p className="text-slate-500 dark:text-white/50 text-sm leading-relaxed">{service.desc}</p>
 
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateRows: isActive ? '1fr' : '0fr',
-            transition: `grid-template-rows 0.35s ${E}`,
-          }}
-        >
-          <div style={{ overflow: 'hidden' }}>
-            <div className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10">
-              <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
-              <ul className="grid grid-cols-2 gap-2">
-                {service.features.map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
-                    <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {isActive && (
+          <div
+            className="pt-6 mt-6 border-t border-slate-200 dark:border-white/10"
+            style={{ animation: 'fade-in-anim 0.25s ease both' }}
+          >
+            <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed mb-6">{service.detail}</p>
+            <ul className="grid grid-cols-2 gap-2">
+              {service.features.map((f) => (
+                <li key={f} className="flex items-center gap-2 text-xs text-slate-500 dark:text-white/50">
+                  <span className="w-1 h-1 rounded-full bg-primary flex-shrink-0" />
+                  {f}
+                </li>
+              ))}
+            </ul>
           </div>
-        </div>
+        )}
 
         <div className={`mt-6 flex items-center gap-2 text-xs font-semibold tracking-widest uppercase transition-colors duration-300 ${
           isActive
