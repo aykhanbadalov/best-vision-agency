@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import { m, useInView } from 'framer-motion'
+import { useState } from 'react'
+import { useReveal } from '../hooks/useReveal'
 import { useLang } from '../context/LanguageContext'
 
 const serviceStatic = [
@@ -9,14 +9,21 @@ const serviceStatic = [
   { id: 'content', number: '04', icon: '◎' },
 ]
 
-function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, expanded }) {
+const E = 'cubic-bezier(0.22,1,0.36,1)'
+
+function ServiceCard({ service, isActive, onClick, index, collapsed, expanded }) {
+  const [ref, visible] = useReveal()
+
   return (
-    <m.div
-      initial={{ opacity: 0, y: 60 }}
-      animate={isInView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.7, delay: 0.1 + index * 0.12, ease: [0.22, 1, 0.36, 1] }}
+    <div
+      ref={ref}
+      style={{
+        opacity: visible ? 1 : 0,
+        transform: visible ? 'none' : 'translateY(3.75rem)',
+        transition: `opacity 0.7s ${E} ${0.1 + index * 0.12}s, transform 0.7s ${E} ${0.1 + index * 0.12}s, border-color 0.3s, background-color 0.3s`,
+      }}
       onClick={onClick}
-      className={`group cursor-pointer border transition-colors duration-300 relative overflow-hidden ${
+      className={`group cursor-pointer border relative overflow-hidden ${
         isActive
           ? 'border-primary bg-primary/10'
           : 'border-slate-200 dark:border-white/10 bg-white dark:bg-slate-900 hover:border-slate-300 dark:hover:border-white/20'
@@ -33,9 +40,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
           </span>
         </div>
 
-        <h3 className="font-display text-2xl font-black text-slate-900 dark:text-white mb-1" style={{ overflow: 'visible' }}>
-          {service.title}
-        </h3>
+        <h3 className="font-display text-2xl font-black text-slate-900 dark:text-white mb-1" style={{ overflow: 'visible' }}>{service.title}</h3>
         <p className="section-label mb-4">{service.subtitle}</p>
         <p className="text-slate-500 dark:text-white/50 text-sm leading-relaxed">{service.desc}</p>
 
@@ -43,7 +48,7 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
           style={{
             display: 'grid',
             gridTemplateRows: isActive ? '1fr' : '0fr',
-            transition: 'grid-template-rows 0.35s cubic-bezier(0.22, 1, 0.36, 1)',
+            transition: `grid-template-rows 0.35s ${E}`,
           }}
         >
           <div style={{ overflow: 'hidden' }}>
@@ -70,13 +75,12 @@ function ServiceCard({ service, isActive, onClick, index, isInView, collapsed, e
           <span style={{ display: 'inline-block', transform: isActive ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.3s ease' }}>→</span>
         </div>
       </div>
-    </m.div>
+    </div>
   )
 }
 
 export default function Services() {
-  const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
+  const [sectionRef, inView] = useReveal()
   const [activeService, setActiveService] = useState(null)
   const { t } = useLang()
 
@@ -91,34 +95,25 @@ export default function Services() {
       <div className="section-container relative">
         <div className="grid lg:grid-cols-2 gap-12 mb-24 items-end">
           <div>
-            <m.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6 }}
+            <span
               className="section-label block mb-6"
+              style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(1.25rem)', transition: `opacity 0.6s ${E}, transform 0.6s ${E}` }}
             >
               {t.services.label}
-            </m.span>
-            <m.h2
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.1 }}
+            </span>
+            <h2
               className="section-title"
+              style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(2.5rem)', transition: `opacity 0.8s ${E} 0.1s, transform 0.8s ${E} 0.1s` }}
             >
-              {t.services.heading1}
-              <br />
-              <span className="text-accent italic">{t.services.heading2}</span>
-            </m.h2>
+              {t.services.heading1}<br /><span className="text-accent italic">{t.services.heading2}</span>
+            </h2>
           </div>
-
-          <m.p
-            initial={{ opacity: 0, y: 30 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
+          <p
             className="text-slate-500 dark:text-white/50 text-base leading-relaxed"
+            style={{ opacity: inView ? 1 : 0, transform: inView ? 'none' : 'translateY(1.875rem)', transition: `opacity 0.6s ${E} 0.3s, transform 0.6s ${E} 0.3s` }}
           >
             {t.services.subtext}
-          </m.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -129,7 +124,6 @@ export default function Services() {
               isActive={activeService === service.id}
               onClick={() => setActiveService(activeService === service.id ? null : service.id)}
               index={i}
-              isInView={isInView}
               collapsed={t.services.collapsed}
               expanded={t.services.expanded}
             />

@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { LazyMotion, domMax } from 'framer-motion'
 import { ThemeProvider } from './context/ThemeContext'
 import { LanguageProvider } from './context/LanguageContext'
 import ScrollToTop from './utils/ScrollToTop'
@@ -26,23 +25,21 @@ function Layout({ children }) {
 
 export default function App() {
   return (
-    <LazyMotion features={domMax}>
-      <ThemeProvider>
-        <LanguageProvider>
-          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
-            <ScrollToTop />
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/haqqimizda" element={<AboutPage />} />
-                <Route path="/xidmetler" element={<ServicesPage />} />
-                <Route path="/islerimiz" element={<PortfolioPage />} />
-                <Route path="/elaqe" element={<ContactPage />} />
-              </Routes>
-            </Layout>
-          </BrowserRouter>
-        </LanguageProvider>
-      </ThemeProvider>
-    </LazyMotion>
+    <ThemeProvider>
+      <LanguageProvider>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <ScrollToTop />
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/haqqimizda" element={<AboutPage />} />
+              <Route path="/xidmetler" element={<ServicesPage />} />
+              <Route path="/islerimiz" element={<PortfolioPage />} />
+              <Route path="/elaqe" element={<ContactPage />} />
+            </Routes>
+          </Layout>
+        </BrowserRouter>
+      </LanguageProvider>
+    </ThemeProvider>
   )
 }

@@ -1,5 +1,4 @@
 import { useRef, useState, useEffect } from 'react'
-import { m, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
@@ -7,34 +6,40 @@ import { useLang } from '../context/LanguageContext'
 export default function Hero() {
   const containerRef = useRef(null)
   const [activeWord, setActiveWord] = useState(0)
-  const [hovered, setHovered] = useState(false)
+  const [wordVisible, setWordVisible] = useState(true)
+  const [scrollProgress, setScrollProgress] = useState(0)
   const { dark } = useTheme()
   const { t } = useLang()
 
   const words = t.hero.words
   const headlineWords = t.hero.headline.split(' ')
 
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end start'],
-  })
-
-  const y = useTransform(scrollYProgress, [0, 1], ['0%', '30%'])
-  const opacity = useTransform(scrollYProgress, [0, 0.7], [1, 0])
-
   useEffect(() => {
     setActiveWord(0)
+    setWordVisible(true)
   }, [t])
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveWord((prev) => (prev + 1) % words.length)
+      setWordVisible(false)
+      setTimeout(() => {
+        setActiveWord(prev => (prev + 1) % words.length)
+        setWordVisible(true)
+      }, 300)
     }, 2500)
     return () => clearInterval(interval)
   }, [words.length])
 
-  const headlineBaseColor = dark ? '#ffffff' : '#0f172a'
-  const headlineAccentColor = dark ? '#60a5fa' : '#040571'
+  useEffect(() => {
+    const container = containerRef.current
+    const onScroll = () => {
+      if (!container) return
+      const rect = container.getBoundingClientRect()
+      setScrollProgress(Math.max(0, Math.min(1, -rect.top / rect.height)))
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <section
@@ -42,7 +47,6 @@ export default function Hero() {
       ref={containerRef}
       className="relative min-h-screen flex items-center overflow-hidden bg-slate-100 dark:bg-black"
     >
-      {/* Background */}
       <div className="absolute inset-0">
         <img
           src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=80"
@@ -57,115 +61,80 @@ export default function Hero() {
             backgroundSize: '80px 80px',
           }}
         />
-        <m.div
-          animate={{ x: [0, 40, 0], y: [0, -30, 0], scale: [1, 1.2, 1] }}
-          transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ willChange: 'transform' }}
+        <div
           className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/10 dark:bg-primary/20 rounded-full blur-3xl"
+          style={{ animation: 'blob-1 12s ease-in-out infinite', willChange: 'transform' }}
         />
-        <m.div
-          animate={{ x: [0, -40, 0], y: [0, 40, 0], scale: [1, 0.8, 1] }}
-          transition={{ duration: 15, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-          style={{ willChange: 'transform' }}
-          className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-primary/8 dark:bg-primary/15 rounded-full blur-3xl"
+        <div
+          className="absolute bottom-1/4 right-1/4 w-80 h-80 rounded-full blur-3xl"
+          style={{ backgroundColor: 'rgba(4,5,113,0.08)', animation: 'blob-2 15s ease-in-out 2s infinite', willChange: 'transform' }}
         />
       </div>
 
-      {/* Content */}
-      <m.div
-        style={{ y, opacity, willChange: 'transform, opacity' }}
+      <div
         className="relative z-10 section-container w-full pt-32 pb-24"
+        style={{
+          transform: `translateY(${scrollProgress * 30}%)`,
+          opacity: Math.max(0, 1 - scrollProgress / 0.7),
+          willChange: 'transform, opacity',
+        }}
       >
         <div className="max-w-5xl">
           {/* Headline */}
-          <div
-            className="mb-10 cursor-default"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
-          >
+          <div className="mb-10 cursor-default group">
             <div className="flex flex-wrap overflow-visible pb-3">
               {headlineWords.map((word, i) => (
-                <m.span
+                <span
                   key={`${word}-${i}`}
-                  initial={{ y: 100, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{
-                    duration: 0.9,
-                    delay: 0.4 + i * 0.1,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
                   className="inline-block mr-4 mb-2 overflow-visible"
-                  style={{ overflow: 'visible' }}
+                  style={{ animation: `word-enter 0.9s cubic-bezier(0.22,1,0.36,1) ${0.4 + i * 0.1}s both` }}
                 >
-                  <m.span
-                    animate={
-                      hovered
-                        ? { color: i % 2 === 0 ? headlineBaseColor : headlineAccentColor }
-                        : { color: headlineBaseColor }
-                    }
-                    transition={{ duration: 0.3, delay: i * 0.04 }}
-                    className="font-display font-black tracking-tight block text-slate-900 dark:text-white"
-                    style={{
-                      fontSize: 'clamp(2.8rem, 7vw, 6rem)',
-                      lineHeight: 1.25,
-                      paddingBlock: '0.1em',
-                      overflow: 'visible',
-                    }}
+                  <span
+                    className={`font-display font-black tracking-tight block text-slate-900 dark:text-white transition-colors duration-300 ${i % 2 !== 0 ? 'group-hover:text-primary dark:group-hover:text-blue-400' : ''}`}
+                    style={{ fontSize: 'clamp(2.8rem, 7vw, 6rem)', lineHeight: 1.25, paddingBlock: '0.1em', overflow: 'visible' }}
                   >
                     {word}
-                  </m.span>
-                </m.span>
+                  </span>
+                </span>
               ))}
             </div>
           </div>
 
           {/* Cycling sub-headline */}
-          <m.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2 }}
+          <div
             className="mb-12 h-12 overflow-hidden"
+            style={{ animation: 'fade-in-anim 0.6s ease 1.2s both' }}
           >
-            <AnimatePresence mode="wait">
-              <m.div
-                key={`${activeWord}-${t.hero.wordsSuffix}`}
-                initial={{ y: 50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
-                transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-                className="flex items-center gap-3"
+            <div
+              className="flex items-center gap-3 transition-all duration-300"
+              style={{ opacity: wordVisible ? 1 : 0, transform: wordVisible ? 'translateY(0)' : 'translateY(-1rem)' }}
+            >
+              <span
+                className="font-display font-light text-primary dark:text-blue-400 italic"
+                style={{ fontSize: 'clamp(1.4rem, 3vw, 2.5rem)', lineHeight: 1.2 }}
               >
-                <span
-                  className="font-display font-light text-primary dark:text-blue-400 italic"
-                  style={{ fontSize: 'clamp(1.4rem, 3vw, 2.5rem)', lineHeight: 1.2 }}
-                >
-                  {words[activeWord]}
-                </span>
-                <span
-                  className="font-display font-light text-slate-500 dark:text-white/50"
-                  style={{ fontSize: 'clamp(1.4rem, 3vw, 2.5rem)', lineHeight: 1.2 }}
-                >
-                  {t.hero.wordsSuffix}
-                </span>
-              </m.div>
-            </AnimatePresence>
-          </m.div>
+                {words[activeWord]}
+              </span>
+              <span
+                className="font-display font-light text-slate-500 dark:text-white/50"
+                style={{ fontSize: 'clamp(1.4rem, 3vw, 2.5rem)', lineHeight: 1.2 }}
+              >
+                {t.hero.wordsSuffix}
+              </span>
+            </div>
+          </div>
 
           {/* Subtext + CTA */}
-          <m.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 1.0 }}
+          <div
             className="flex flex-col sm:flex-row items-start sm:items-center gap-8"
+            style={{ animation: 'fade-up 0.8s cubic-bezier(0.22,1,0.36,1) 1.0s both' }}
           >
             <p className="text-slate-600 dark:text-gray-300 text-base leading-relaxed max-w-sm font-light">
               {t.hero.subtext}
             </p>
             <div className="flex items-center gap-4 flex-wrap">
               <Link to="/islerimiz">
-                <button className="btn-primary">
-                  {t.hero.ctaPrimary}
-                </button>
+                <button className="btn-primary">{t.hero.ctaPrimary}</button>
               </Link>
               <Link to="/elaqe">
                 <button className="inline-flex items-center gap-2 border border-slate-400 dark:border-white/30 text-slate-900 dark:text-white px-8 py-4 text-sm font-semibold tracking-widest uppercase transition-all duration-300 hover:border-primary hover:bg-primary hover:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-black">
@@ -173,26 +142,21 @@ export default function Hero() {
                 </button>
               </Link>
             </div>
-          </m.div>
+          </div>
         </div>
 
         {/* Scroll indicator */}
-        <m.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2 }}
+        <div
           className="absolute bottom-8 right-0 flex flex-col items-center gap-3"
+          style={{ animation: 'fade-in-anim 0.6s ease 2s both' }}
         >
-          <m.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity }}
-            style={{ willChange: 'transform' }}
+          <div
             className="w-px h-12 bg-gradient-to-b from-slate-400 dark:from-white/40 to-transparent"
+            style={{ animation: 'bounce-line 1.5s ease-in-out infinite', willChange: 'transform' }}
           />
-        </m.div>
-      </m.div>
+        </div>
+      </div>
 
-      {/* Bottom fade into next section */}
       <div className="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-slate-100 dark:from-black to-transparent" />
     </section>
   )

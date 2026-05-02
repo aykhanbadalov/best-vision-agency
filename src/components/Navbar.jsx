@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { m, AnimatePresence } from 'framer-motion'
 import { Link, useLocation } from 'react-router-dom'
 import { useTheme } from '../context/ThemeContext'
 import { useLang } from '../context/LanguageContext'
@@ -33,24 +32,19 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    setMenuOpen(false)
-  }, [location])
+  useEffect(() => { setMenuOpen(false) }, [location])
 
   return (
     <>
-      <m.nav
-        initial={{ y: -100, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.8, ease: 'easeOut' }}
+      <nav
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
           scrolled
             ? 'bg-white/95 dark:bg-slate-950/95 backdrop-blur-md border-b border-slate-200 dark:border-white/10'
             : 'bg-white/0 dark:bg-black/0'
         }`}
+        style={{ animation: 'nav-enter 0.8s ease-out both' }}
       >
         <div className="section-container relative flex items-center justify-between h-20">
-          {/* Logo */}
           <Link to="/" className="cursor-pointer flex items-center gap-2 md:gap-3 min-w-0 flex-shrink-0">
             <img src="/logo-dark.png" alt="Best Vision" className="h-7 sm:h-8 w-auto object-contain block dark:hidden flex-shrink-0" />
             <img src="/logo-light.png" alt="Best Vision" className="h-7 sm:h-8 w-auto object-contain hidden dark:block flex-shrink-0" />
@@ -59,7 +53,6 @@ export default function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Links — absolutely centered */}
           <div className="hidden lg:flex items-center gap-10 absolute left-1/2 -translate-x-1/2">
             {t.nav.links.map((link) => {
               const active = location.pathname === link.to
@@ -68,139 +61,74 @@ export default function Navbar() {
                   key={link.to}
                   to={link.to}
                   className={`text-xs font-semibold tracking-widest uppercase cursor-pointer transition-colors duration-300 relative group whitespace-nowrap ${
-                    active
-                      ? 'text-primary dark:text-white'
-                      : 'text-slate-700 dark:text-white/70 hover:text-slate-900 dark:hover:text-white'
+                    active ? 'text-primary dark:text-white' : 'text-slate-700 dark:text-white/70 hover:text-slate-900 dark:hover:text-white'
                   }`}
                 >
                   {link.label}
-                  <span
-                    className={`absolute -bottom-1 left-0 h-px bg-primary transition-all duration-300 ${
-                      active ? 'w-full' : 'w-0 group-hover:w-full'
-                    }`}
-                  />
+                  <span className={`absolute -bottom-1 left-0 h-px bg-primary transition-all duration-300 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} />
                 </Link>
               )
             })}
           </div>
 
-          {/* Right: lang toggle + theme toggle + CTA — always pinned to far right */}
           <div className="hidden lg:flex items-center gap-4 flex-shrink-0">
-            <button
-              onClick={toggleLang}
-              className="text-xs font-bold tracking-widest text-slate-500 dark:text-white/50 hover:text-primary dark:hover:text-blue-400 transition-colors duration-300"
-              aria-label="Switch language"
-            >
+            <button onClick={toggleLang} className="text-xs font-bold tracking-widest text-slate-500 dark:text-white/50 hover:text-primary dark:hover:text-blue-400 transition-colors duration-300" aria-label="Switch language">
               <span className={lang === 'az' ? 'text-primary dark:text-blue-400' : ''}>AZ</span>
               <span className="mx-1 text-slate-300 dark:text-white/20">|</span>
               <span className={lang === 'en' ? 'text-primary dark:text-blue-400' : ''}>EN</span>
             </button>
-
-            <button
-              onClick={toggle}
-              className="w-9 h-9 flex items-center justify-center border border-slate-300 dark:border-white/20 text-slate-700 dark:text-white/70 hover:text-primary dark:hover:text-blue-400 hover:border-primary dark:hover:border-blue-400 transition-colors duration-300"
-              aria-label="Toggle theme"
-            >
-              <AnimatePresence mode="wait">
-                <m.span
-                  key={dark ? 'sun' : 'moon'}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  {dark ? <SunIcon /> : <MoonIcon />}
-                </m.span>
-              </AnimatePresence>
+            <button onClick={toggle} className="w-9 h-9 flex items-center justify-center border border-slate-300 dark:border-white/20 text-slate-700 dark:text-white/70 hover:text-primary dark:hover:text-blue-400 hover:border-primary dark:hover:border-blue-400 transition-colors duration-300" aria-label="Toggle theme">
+              {dark ? <SunIcon /> : <MoonIcon />}
             </button>
-
             <Link to="/elaqe">
-              <button className="btn-primary text-xs py-3 px-6">
-                {t.nav.cta}
-              </button>
+              <button className="btn-primary text-xs py-3 px-6">{t.nav.cta}</button>
             </Link>
           </div>
 
-          {/* Mobile: lang + theme toggle + hamburger */}
           <div className="lg:hidden flex items-center gap-1.5 sm:gap-3">
-            <button
-              onClick={toggleLang}
-              className="text-xs font-bold tracking-widest text-slate-500 dark:text-white/50"
-              aria-label="Switch language"
-            >
+            <button onClick={toggleLang} className="text-xs font-bold tracking-widest text-slate-500 dark:text-white/50" aria-label="Switch language">
               <span className={lang === 'az' ? 'text-primary dark:text-blue-400' : ''}>AZ</span>
               <span className="mx-0.5 text-slate-300 dark:text-white/20">|</span>
               <span className={lang === 'en' ? 'text-primary dark:text-blue-400' : ''}>EN</span>
             </button>
-
-            <button
-              onClick={toggle}
-              className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-white/70"
-              aria-label="Toggle theme"
-            >
+            <button onClick={toggle} className="w-8 h-8 flex items-center justify-center text-slate-700 dark:text-white/70" aria-label="Toggle theme">
               {dark ? <SunIcon /> : <MoonIcon />}
             </button>
-
-            <button
-              onClick={() => setMenuOpen(!menuOpen)}
-              className="flex flex-col gap-1.5 p-2"
-              aria-label="Menu"
-            >
-              <m.span
-                animate={menuOpen ? { rotate: 45, y: 8 } : { rotate: 0, y: 0 }}
-                className="w-6 h-px bg-slate-900 dark:bg-white block"
-              />
-              <m.span
-                animate={menuOpen ? { opacity: 0 } : { opacity: 1 }}
-                className="w-6 h-px bg-slate-900 dark:bg-white block"
-              />
-              <m.span
-                animate={menuOpen ? { rotate: -45, y: -8 } : { rotate: 0, y: 0 }}
-                className="w-6 h-px bg-slate-900 dark:bg-white block"
-              />
+            <button onClick={() => setMenuOpen(!menuOpen)} className="flex flex-col gap-1.5 p-2" aria-label="Menu">
+              <span className={`w-6 h-px bg-slate-900 dark:bg-white block transition-all duration-300 ${menuOpen ? 'rotate-45 translate-y-2' : ''}`} />
+              <span className={`w-6 h-px bg-slate-900 dark:bg-white block transition-all duration-300 ${menuOpen ? 'opacity-0' : ''}`} />
+              <span className={`w-6 h-px bg-slate-900 dark:bg-white block transition-all duration-300 ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`} />
             </button>
           </div>
         </div>
-      </m.nav>
+      </nav>
 
       {/* Mobile Menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <m.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="fixed inset-0 z-40 bg-white dark:bg-slate-950 flex flex-col items-center justify-center gap-10"
+      <div
+        className={`fixed inset-0 z-40 bg-white dark:bg-slate-950 flex flex-col items-center justify-center gap-10 transition-transform duration-300 ease-in-out ${
+          menuOpen ? 'translate-x-0' : 'translate-x-full'
+        }`}
+      >
+        {t.nav.links.map((link, i) => (
+          <div
+            key={link.to}
+            style={{
+              opacity: menuOpen ? 1 : 0,
+              transform: menuOpen ? 'translateY(0)' : 'translateY(20px)',
+              transition: `opacity 0.4s ease ${i * 0.08}s, transform 0.4s ease ${i * 0.08}s`,
+            }}
           >
-            {t.nav.links.map((link, i) => (
-              <m.div
-                key={link.to}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: i * 0.08 }}
-              >
-                <Link
-                  to={link.to}
-                  className="font-display text-4xl font-bold text-slate-900 dark:text-white hover:text-primary dark:hover:text-blue-400 cursor-pointer transition-colors duration-300"
-                >
-                  {link.label}
-                </Link>
-              </m.div>
-            ))}
-            <m.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="mt-4"
-            >
-              <Link to="/elaqe">
-                <button className="btn-primary">{t.nav.cta}</button>
-              </Link>
-            </m.div>
-          </m.div>
-        )}
-      </AnimatePresence>
+            <Link to={link.to} className="font-display text-4xl font-bold text-slate-900 dark:text-white hover:text-primary dark:hover:text-blue-400 cursor-pointer transition-colors duration-300">
+              {link.label}
+            </Link>
+          </div>
+        ))}
+        <div style={{ opacity: menuOpen ? 1 : 0, transition: 'opacity 0.4s ease 0.5s' }} className="mt-4">
+          <Link to="/elaqe">
+            <button className="btn-primary">{t.nav.cta}</button>
+          </Link>
+        </div>
+      </div>
     </>
   )
 }

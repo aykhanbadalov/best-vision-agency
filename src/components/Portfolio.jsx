@@ -1,5 +1,5 @@
-import { useRef, useState } from 'react'
-import { m, useInView, AnimatePresence } from 'framer-motion'
+import { useState, useEffect } from 'react'
+import { useReveal, anim } from '../hooks/useReveal'
 import { useLang } from '../context/LanguageContext'
 
 const projectStatic = [
@@ -12,128 +12,95 @@ const projectStatic = [
 ]
 
 function ProjectCard({ project, onClick, clickHint }) {
-  const [hovered, setHovered] = useState(false)
   const isLarge = project.size === 'large'
-
   return (
-    <m.div
-      layout
+    <div
       className="relative overflow-hidden cursor-pointer group"
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
       onClick={() => onClick(project)}
     >
       <div
         className={`w-full overflow-hidden relative ${isLarge ? 'aspect-video' : 'aspect-square'} min-h-[280px]`}
         style={{ backgroundColor: project.color }}
       >
-        <img
-          src={project.image}
-          alt={project.title}
-          className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-        />
+        <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
         <div className="absolute inset-0 bg-black/20 group-hover:bg-black/50 transition-colors duration-500" />
 
-        <AnimatePresence>
-          {hovered && (
-            <m.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <div className="w-16 h-16 bg-white/10 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <div className="w-0 h-0 border-t-8 border-b-8 border-l-[14px] border-transparent border-l-white ml-1" />
-              </div>
-            </m.div>
-          )}
-        </AnimatePresence>
+        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-300">
+          <div className="w-16 h-16 bg-white/10 border border-white/30 rounded-full flex items-center justify-center backdrop-blur-sm">
+            <div className="w-0 h-0 border-t-8 border-b-8 border-l-[14px] border-transparent border-l-white ml-1" />
+          </div>
+        </div>
 
-        <m.div
-          animate={{ y: hovered ? 0 : 20, opacity: hovered ? 1 : 0 }}
-          transition={{ duration: 0.4 }}
-          className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent"
-        >
+        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent translate-y-5 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-400">
           <span className="text-blue-400 text-xs font-semibold tracking-widest uppercase">{project.category}</span>
           <h3 className="text-white font-display font-bold text-xl mt-1" style={{ overflow: 'visible' }}>{project.title}</h3>
           <div className="flex items-center gap-2 mt-3">
             <span className="text-green-400 text-sm font-semibold">{project.result}</span>
             <span className="text-white/30 text-xs">{clickHint}</span>
           </div>
-        </m.div>
+        </div>
       </div>
 
       <div className="absolute top-4 left-4">
-        <span className="bg-black/60 backdrop-blur-sm text-white/60 text-xs px-3 py-1 tracking-widest uppercase">
-          {project.category}
-        </span>
+        <span className="bg-black/60 backdrop-blur-sm text-white/60 text-xs px-3 py-1 tracking-widest uppercase">{project.category}</span>
       </div>
-    </m.div>
+    </div>
   )
 }
 
 function CaseStudyModal({ project, onClose, labels }) {
+  const [visible, setVisible] = useState(false)
+
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setVisible(true))
+    return () => cancelAnimationFrame(id)
+  }, [])
+
+  const close = () => {
+    setVisible(false)
+    setTimeout(onClose, 300)
+  }
+
   return (
-    <m.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
+    <div
       className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm"
-      onClick={onClose}
+      style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.3s ease' }}
+      onClick={close}
     >
-      <m.div
-        initial={{ scale: 0.9, y: 40 }}
-        animate={{ scale: 1, y: 0 }}
-        exit={{ scale: 0.9, y: 40 }}
-        transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+      <div
         className="bg-white dark:bg-[#0a0a0a] border border-slate-200 dark:border-white/10 max-w-2xl w-full p-10 relative"
-        onClick={(e) => e.stopPropagation()}
+        style={{
+          opacity: visible ? 1 : 0,
+          transform: visible ? 'none' : 'scale(0.9) translateY(2.5rem)',
+          transition: 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.22,1,0.36,1)',
+        }}
+        onClick={e => e.stopPropagation()}
       >
-        <button
-          onClick={onClose}
-          className="absolute top-6 right-6 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition-colors text-2xl leading-none"
-        >
-          ×
-        </button>
+        <button onClick={close} className="absolute top-6 right-6 text-slate-400 dark:text-white/40 hover:text-slate-900 dark:hover:text-white transition-colors text-2xl leading-none">×</button>
 
         <span className="section-label block mb-4">{project.category}</span>
-        <h3
-          className="font-display text-4xl font-black text-slate-900 dark:text-white mb-8"
-          style={{ overflow: 'visible' }}
-        >
-          {project.title}
-        </h3>
+        <h3 className="font-display text-4xl font-black text-slate-900 dark:text-white mb-8" style={{ overflow: 'visible' }}>{project.title}</h3>
 
         <div className="grid gap-6">
-          {[
-            { label: labels.modalGoal, value: project.goal },
-            { label: labels.modalStrategy, value: project.strategy },
-          ].map(({ label, value }) => (
+          {[{ label: labels.modalGoal, value: project.goal }, { label: labels.modalStrategy, value: project.strategy }].map(({ label, value }) => (
             <div key={label} className="border-l-2 border-primary/40 dark:border-blue-400/50 pl-6">
               <span className="section-label block mb-1">{label}</span>
               <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed">{value}</p>
             </div>
           ))}
-
           <div className="bg-primary/10 border border-primary/30 p-6 mt-2">
             <span className="section-label block mb-2">{labels.modalResult}</span>
-            <div
-              className="text-green-500 dark:text-green-400 font-display font-black text-3xl mb-2"
-              style={{ overflow: 'visible' }}
-            >
-              {project.result}
-            </div>
+            <div className="text-green-500 dark:text-green-400 font-display font-black text-3xl mb-2" style={{ overflow: 'visible' }}>{project.result}</div>
             <p className="text-slate-600 dark:text-gray-300 text-sm leading-relaxed">{project.resultDetail}</p>
           </div>
         </div>
-      </m.div>
-    </m.div>
+      </div>
+    </div>
   )
 }
 
 export default function Portfolio() {
-  const sectionRef = useRef(null)
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 })
+  const [sectionRef, inView] = useReveal()
   const [selectedProject, setSelectedProject] = useState(null)
   const { t } = useLang()
 
@@ -144,59 +111,36 @@ export default function Portfolio() {
       <div className="section-container">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between mb-20 gap-8">
           <div>
-            <m.span
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6 }}
-              className="section-label block mb-6"
-            >
-              {t.portfolio.label}
-            </m.span>
-            <m.h2
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="section-title"
-            >
-              {t.portfolio.heading1}
-              <br />
-              <span className="text-accent italic">{t.portfolio.heading2}</span>
-            </m.h2>
+            <span className="section-label block mb-6" style={anim(inView, 0)}>{t.portfolio.label}</span>
+            <h2 className="section-title" style={anim(inView, 0.1, 'bottom', 0.8)}>
+              {t.portfolio.heading1}<br /><span className="text-accent italic">{t.portfolio.heading2}</span>
+            </h2>
           </div>
-          <m.p
-            initial={{ opacity: 0 }}
-            animate={isInView ? { opacity: 1 } : {}}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-slate-400 dark:text-white/40 max-w-xs text-sm leading-relaxed lg:text-right"
-          >
+          <p className="text-slate-400 dark:text-white/40 max-w-xs text-sm leading-relaxed lg:text-right" style={anim(inView, 0.3)}>
             {t.portfolio.subtext}
-          </m.p>
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 auto-rows-auto">
           {projects.map((project, i) => (
-            <m.div
+            <div
               key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.6, delay: 0.1 + i * 0.08 }}
               className={project.size === 'large' ? 'lg:col-span-2' : ''}
+              style={anim(inView, 0.1 + i * 0.08)}
             >
               <ProjectCard project={project} onClick={setSelectedProject} clickHint={t.portfolio.clickHint} />
-            </m.div>
+            </div>
           ))}
         </div>
       </div>
 
-      <AnimatePresence>
-        {selectedProject && (
-          <CaseStudyModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-            labels={t.portfolio}
-          />
-        )}
-      </AnimatePresence>
+      {selectedProject && (
+        <CaseStudyModal
+          project={selectedProject}
+          onClose={() => setSelectedProject(null)}
+          labels={t.portfolio}
+        />
+      )}
     </section>
   )
 }
